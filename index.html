@@ -68,14 +68,25 @@
 <script>
 const ASSOCIATE_TAG = 'tpl0c12-20';
 
-// Add new task-specific lists here. Paste a normal Amazon product URL into `url`.
-// The site automatically adds your Amazon Associates tracking tag.
 const supplyLists = [
   {
-    id: 'first-list',
-    title: 'First Supply List',
-    description: 'Send me the task name and the Amazon products you want here, and this placeholder will be replaced.',
-    items: []
+    id: 'recommended-supplies',
+    title: 'Recommended Supplies',
+    description: 'Travel, storage, labeling, hydration, and accessory supplies collected in one place.',
+    items: [
+      { name: 'Reusable Travel Ice', note: 'Reusable cold-pack option for travel.', url: 'https://amzn.to/45WELGJ' },
+      { name: 'Travel Pouch', note: 'Compact pouch for keeping travel supplies organized.', url: 'https://amzn.to/4g5dgiW' },
+      { name: 'Saline Solution (Nasal Spray)', note: 'Saline solution for nasal spray use.', url: 'https://amzn.to/4wsxyJw' },
+      { name: 'Injector Pen Storage', note: 'Storage case for injector pens and accessories.', url: 'https://amzn.to/4zf9Cfc' },
+      { name: 'Nasal Spray Vial', note: 'Refillable nasal spray vial.', url: 'https://amzn.to/45jHPMZ' },
+      { name: 'Clear Protein', note: 'Clear protein drink option.', url: 'https://amzn.to/45Xhp3K' },
+      { name: 'Label Maker (Niimbot M2)', note: 'Niimbot M2 label maker.', url: 'https://amzn.to/4xxgiU5' },
+      { name: 'Labels for M2', note: 'Compatible labels for the Niimbot M2.', url: 'https://amzn.to/4zgqH8t' },
+      { name: '3ml Cartridges (For Injector Pens)', note: '3 mL cartridges for compatible injector pens.', url: 'https://amzn.to/4hvkOxV' },
+      { name: 'Injector Pen', note: 'Reusable injector pen.', url: 'https://amzn.to/4cw3rcH' },
+      { name: 'Sharps Container', note: 'Container for safe sharps disposal.', url: 'https://amzn.to/4i3H8yG' },
+      { name: '31ga 6mm', note: '31 gauge, 6 mm pen needles.', url: 'https://amzn.to/4fSl9tg' }
+    ]
   }
 ];
 
