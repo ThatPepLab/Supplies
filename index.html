@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Supply Lists</title>
+  <meta name="description" content="Task-specific supply lists with direct Amazon links." />
+  <style>
+    :root{
+      --bg:#0b0f14;--panel:#111821;--panel2:#17212c;--text:#f5f7fa;--muted:#9ca9b6;
+      --line:#273443;--accent:#ff9900;--accent2:#ffb84d;--shadow:0 14px 40px rgba(0,0,0,.28)
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#080b10 0%,var(--bg) 100%);color:var(--text);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;min-height:100vh}
+    .wrap{width:min(1100px,92vw);margin:auto}
+    header{padding:52px 0 26px}
+    .eyebrow{color:var(--accent);font-weight:800;letter-spacing:.12em;text-transform:uppercase;font-size:.78rem}
+    h1{margin:.25rem 0 .6rem;font-size:clamp(2rem,5vw,4rem);line-height:1}
+    .sub{color:var(--muted);max-width:720px;font-size:1.05rem}
+    .notice{margin:20px 0 0;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.025);color:#c9d2dc;font-size:.92rem}
+    .toolbar{display:flex;gap:12px;flex-wrap:wrap;margin:26px 0}
+    input{flex:1;min-width:230px;background:var(--panel);color:var(--text);border:1px solid var(--line);padding:13px 15px;border-radius:12px;outline:none}
+    input:focus{border-color:#667789}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;padding-bottom:54px}
+    .card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);display:flex;flex-direction:column;min-height:190px}
+    .card h2{font-size:1.25rem;margin:0 0 8px}.card p{color:var(--muted);margin:0 0 18px}
+    .count{margin-top:auto;color:#c8d2dc;font-size:.9rem}
+    button,.btn{appearance:none;border:0;background:var(--accent);color:#161616;font-weight:800;padding:11px 14px;border-radius:11px;cursor:pointer;text-decoration:none;text-align:center}
+    button:hover,.btn:hover{background:var(--accent2)}
+    .listView{display:none;padding-bottom:60px}
+    .back{background:transparent;color:var(--text);border:1px solid var(--line);margin-bottom:18px}
+    .listHead{display:flex;justify-content:space-between;gap:20px;align-items:end;flex-wrap:wrap;margin-bottom:20px}
+    .items{display:grid;gap:12px}
+    .item{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;background:var(--panel);border:1px solid var(--line);padding:16px;border-radius:14px}
+    .item h3{margin:0 0 4px;font-size:1rem}.item p{margin:0;color:var(--muted);font-size:.92rem}
+    .empty{border:1px dashed var(--line);border-radius:16px;padding:30px;text-align:center;color:var(--muted)}
+    footer{border-top:1px solid var(--line);color:var(--muted);padding:24px 0 36px;font-size:.86rem}
+    @media(max-width:620px){.item{grid-template-columns:1fr}.item .btn{width:100%}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="eyebrow">Recommended Supplies</div>
+      <h1>Supply Lists</h1>
+      <div class="sub">Pick a task to see the exact tools and supplies recommended for it. Each list is designed to keep everything in one place.</div>
+      <div class="notice"><strong>Affiliate disclosure:</strong> As an Amazon Associate I earn from qualifying purchases.</div>
+    </header>
+
+    <main>
+      <section id="homeView">
+        <div class="toolbar"><input id="search" type="search" placeholder="Search supply lists…" aria-label="Search supply lists" /></div>
+        <div id="cards" class="grid"></div>
+      </section>
+
+      <section id="listView" class="listView">
+        <button class="back" id="backBtn">← All supply lists</button>
+        <div class="listHead">
+          <div><div class="eyebrow">Supply List</div><h1 id="listTitle" style="font-size:clamp(2rem,5vw,3.2rem)"></h1><div id="listDesc" class="sub"></div></div>
+        </div>
+        <div id="items" class="items"></div>
+      </section>
+    </main>
+
+    <footer>Product availability and pricing can change on Amazon. This site is independently maintained and is not Amazon.com.</footer>
+  </div>
+
+<script>
+const ASSOCIATE_TAG = 'tpl0c12-20';
+
+// Add new task-specific lists here. Paste a normal Amazon product URL into `url`.
+// The site automatically adds your Amazon Associates tracking tag.
+const supplyLists = [
+  {
+    id: 'first-list',
+    title: 'First Supply List',
+    description: 'Send me the task name and the Amazon products you want here, and this placeholder will be replaced.',
+    items: []
+  }
+];
+
+function affiliateUrl(rawUrl){
+  if(!rawUrl) return '#';
+  try{
+    const u = new URL(rawUrl);
+    if(!/(^|\.)amazon\.com$/i.test(u.hostname) && !/(^|\.)amzn\.to$/i.test(u.hostname)) return rawUrl;
+    if(/amazon\.com$/i.test(u.hostname)) u.searchParams.set('tag', ASSOCIATE_TAG);
+    return u.toString();
+  }catch{return rawUrl}
+}
+
+const cards = document.getElementById('cards');
+const homeView = document.getElementById('homeView');
+const listView = document.getElementById('listView');
+const search = document.getElementById('search');
+
+function renderCards(filter=''){
+  const q=filter.trim().toLowerCase();
+  const shown=supplyLists.filter(x => (x.title+' '+x.description).toLowerCase().includes(q));
+  cards.innerHTML = shown.map(x => `
+    <article class="card">
+      <h2>${x.title}</h2>
+      <p>${x.description}</p>
+      <div class="count">${x.items.length} item${x.items.length===1?'':'s'}</div>
+      <button style="margin-top:14px" onclick="openList('${x.id}')">View List</button>
+    </article>`).join('') || '<div class="empty">No supply lists match that search.</div>';
+}
+
+function openList(id){
+  const list=supplyLists.find(x=>x.id===id); if(!list) return;
+  document.getElementById('listTitle').textContent=list.title;
+  document.getElementById('listDesc').textContent=list.description;
+  document.getElementById('items').innerHTML = list.items.length ? list.items.map(item=>`
+    <article class="item">
+      <div><h3>${item.name}</h3><p>${item.note||''}</p></div>
+      <a class="btn" href="${affiliateUrl(item.url)}" target="_blank" rel="sponsored noopener">View on Amazon</a>
+    </article>`).join('') : '<div class="empty">Items will appear here once this list is populated.</div>';
+  homeView.style.display='none'; listView.style.display='block'; window.scrollTo({top:0,behavior:'smooth'});
+}
+
+document.getElementById('backBtn').onclick=()=>{listView.style.display='none';homeView.style.display='block';window.scrollTo({top:0,behavior:'smooth'})};
+search.addEventListener('input',e=>renderCards(e.target.value));
+renderCards();
+</script>
+</body>
+</html>
